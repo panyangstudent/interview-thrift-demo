@@ -1,8 +1,9 @@
-package interview_thrift_demo
+package server
 
 import (
 	"git.apache.org/thrift.git/lib/go/thrift"
 	"interview/gen-go/user"
+	"interview/handler"
 	"time"
 )
 
@@ -18,7 +19,7 @@ func UserServer()  {
 	transportFactory :=  thrift.NewTTransportFactory()
 
 	transport, _:= thrift.NewTServerSocket("8090")
-	processor := user.NewUserServiceProcessor(&UserServiceHandler{})
+	processor := user.NewUserServiceProcessor(&handler.UserServiceHandler{})
 	server := thrift.NewTSimpleServer4(processor,transport,transportFactory,protocolFactory)
 	server.Serve()
 }

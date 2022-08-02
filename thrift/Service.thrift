@@ -19,3 +19,7 @@ service Greeter {
         1:required i32 uid
     )
 }
+
+service SimpleService {
+    i32 add(1:i32 num1, 2:string num2)
+}

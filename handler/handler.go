@@ -1,4 +1,4 @@
-package interview_thrift_demo
+package handler
 
 import (
 	"context"

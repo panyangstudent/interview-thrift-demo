@@ -1,4 +1,4 @@
-package interview_thrift_demo
+package client
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func handleClient(client *user.UserServiceClient)  {
+func handleClient(client *thrift.)  {
 	//ctx := context.TODO()
 	res ,_ := client.Add(13, "25")
 	fmt.Println("result is ", res)

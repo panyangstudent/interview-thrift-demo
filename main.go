@@ -1,4 +1,4 @@
-package main
+package interview_thrift_demo
 
 import (
 	"flag"
