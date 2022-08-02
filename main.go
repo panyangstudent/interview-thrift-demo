@@ -2,21 +2,21 @@ package interview_thrift_demo
 
 import (
 	"flag"
-	"interview/gen-go/user"
+	"interview/server"
+	"interview/client"
 )
 
 func main() {
-	User()
+	Simple()
 }
 
-func User() {
-	server := flag.Bool("server",true,"是否是服务器")
+func Simple() {
+	server1 := flag.Bool("server",true,"是否是服务器")
 	flag.Parse()
 
-	if *server {
-		user.UserService()
+	if *server1 {
+		server.SimpleServer()
 	} else {
-		user.UserServiceClient{}
-		simple_client.SimpleClient()
+		client.SimpleClient()
 	}
 }

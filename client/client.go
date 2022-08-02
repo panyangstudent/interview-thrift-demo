@@ -1,18 +1,19 @@
 package client
 
 import (
+	"context"
 	"fmt"
 	"git.apache.org/thrift.git/lib/go/thrift"
-	"interview/gen-go/user"
+	"interview/gen-go/Sample"
 	"time"
 )
 
-func handleClient(client *thrift.)  {
-	//ctx := context.TODO()
-	res ,_ := client.Add(13, "25")
+func handleClient(client *Sample.SimpleServiceClient) {
+	ctx := context.TODO()
+	res, _ := client.Add(ctx,13,"25")
 	fmt.Println("result is ", res)
 }
-func UserClient()  {
+func SimpleClient()  {
 	var transport thrift.TTransport
 	transport,  _ = thrift.NewTSocketConf("localhost:8090", &thrift.TConfiguration{
 		ConnectTimeout: time.Second, // Use 0 for no timeout
@@ -32,5 +33,5 @@ func UserClient()  {
 	transport.Open()
 	iprot := protocolFactory.GetProtocol(transport)
 	oprot := protocolFactory.GetProtocol(transport)
-	handleClient(user.new(thrift.NewTStandardClient(iprot, oprot)))
+	handleClient(Sample.NewSimpleServiceClient(thrift.NewTStandardClient(iprot, oprot)))
 }
