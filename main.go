@@ -1,9 +1,9 @@
-package interview_thrift_demo
+package main
 
 import (
 	"flag"
-	"interview/server"
 	"interview/client"
+	"interview/server"
 )
 
 func main() {
