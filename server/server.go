@@ -2,8 +2,8 @@ package server
 
 import (
 	"git.apache.org/thrift.git/lib/go/thrift"
-	"interview/handler"
 	"interview/gen-go/Sample"
+	"interview/handler"
 	"time"
 )
 
@@ -17,9 +17,9 @@ func SimpleServer() {
 	}
 
 	protocolFactory := thrift.NewTBinaryProtocolFactoryConf(conf)
+
 	transportFactory := thrift.NewTTransportFactory()
 
-	//
 	transport, _ := thrift.NewTServerSocket(":8090")
 
 	processor := Sample.NewSimpleServiceProcessor(&handler.SimpleServiceHandler{})
