@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 	"time"
-	thrift "git.apache.org/thrift.git/lib/go/thrift"
+	thrift "github.com/apache/thrift/lib/go/thrift"
 )
 
 // (needed to ensure safety because of naive import list construction.)
@@ -25,7 +25,7 @@ var _ = bytes.Equal
 //  - Mobile
 type User struct {
   ID int32 `thrift:"id,1,required" db:"id" json:"id"`
-  Name string `thrift:"name,2,required" db:"name" json:"name"`
+  Name *string `thrift:"name,2" db:"name" json:"name,omitempty"`
   Avatar string `thrift:"avatar,3,required" db:"avatar" json:"avatar"`
   Address string `thrift:"address,4,required" db:"address" json:"address"`
   Mobile string `thrift:"mobile,5,required" db:"mobile" json:"mobile"`
@@ -39,9 +39,12 @@ func NewUser() *User {
 func (p *User) GetID() int32 {
   return p.ID
 }
-
+var User_Name_DEFAULT string
 func (p *User) GetName() string {
-  return p.Name
+  if !p.IsSetName() {
+    return User_Name_DEFAULT
+  }
+return *p.Name
 }
 
 func (p *User) GetAvatar() string {
@@ -55,13 +58,16 @@ func (p *User) GetAddress() string {
 func (p *User) GetMobile() string {
   return p.Mobile
 }
+func (p *User) IsSetName() bool {
+  return p.Name != nil
+}
+
 func (p *User) Read(ctx context.Context, iprot thrift.TProtocol) error {
   if _, err := iprot.ReadStructBegin(ctx); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
   }
 
   var issetID bool = false;
-  var issetName bool = false;
   var issetAvatar bool = false;
   var issetAddress bool = false;
   var issetMobile bool = false;
@@ -89,7 +95,6 @@ func (p *User) Read(ctx context.Context, iprot thrift.TProtocol) error {
         if err := p.ReadField2(ctx, iprot); err != nil {
           return err
         }
-        issetName = true
       } else {
         if err := iprot.Skip(ctx, fieldTypeId); err != nil {
           return err
@@ -143,9 +148,6 @@ func (p *User) Read(ctx context.Context, iprot thrift.TProtocol) error {
   if !issetID{
     return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("Required field ID is not set"));
   }
-  if !issetName{
-    return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("Required field Name is not set"));
-  }
   if !issetAvatar{
     return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("Required field Avatar is not set"));
   }
@@ -171,7 +173,7 @@ func (p *User)  ReadField2(ctx context.Context, iprot thrift.TProtocol) error {
   if v, err := iprot.ReadString(ctx); err != nil {
   return thrift.PrependError("error reading field 2: ", err)
 } else {
-  p.Name = v
+  p.Name = &v
 }
   return nil
 }
@@ -231,12 +233,14 @@ func (p *User) writeField1(ctx context.Context, oprot thrift.TProtocol) (err err
 }
 
 func (p *User) writeField2(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "name", thrift.STRING, 2); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:name: ", p), err) }
-  if err := oprot.WriteString(ctx, string(p.Name)); err != nil {
-  return thrift.PrependError(fmt.Sprintf("%T.name (2) field write error: ", p), err) }
-  if err := oprot.WriteFieldEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field end error 2:name: ", p), err) }
+  if p.IsSetName() {
+    if err := oprot.WriteFieldBegin(ctx, "name", thrift.STRING, 2); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:name: ", p), err) }
+    if err := oprot.WriteString(ctx, string(*p.Name)); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T.name (2) field write error: ", p), err) }
+    if err := oprot.WriteFieldEnd(ctx); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 2:name: ", p), err) }
+  }
   return err
 }
 
@@ -277,7 +281,12 @@ func (p *User) Equals(other *User) bool {
     return false
   }
   if p.ID != other.ID { return false }
-  if p.Name != other.Name { return false }
+  if p.Name != other.Name {
+    if p.Name == nil || other.Name == nil {
+      return false
+    }
+    if (*p.Name) != (*other.Name) { return false }
+  }
   if p.Avatar != other.Avatar { return false }
   if p.Address != other.Address { return false }
   if p.Mobile != other.Mobile { return false }

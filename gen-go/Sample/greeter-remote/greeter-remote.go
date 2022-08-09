@@ -6,14 +6,14 @@ import (
 	"context"
 	"flag"
 	"fmt"
-  "interview/gen-go/Sample"
-  "math"
+	"math"
 	"net"
 	"net/url"
 	"os"
 	"strconv"
 	"strings"
-	thrift "git.apache.org/thrift.git/lib/go/thrift"
+	thrift "github.com/apache/thrift/lib/go/thrift"
+	"Sample"
 )
 
 var _ = Sample.GoUnusedProtection__
@@ -104,7 +104,7 @@ func main() {
                    os.Exit(1)
            }
     }
-    trans, err = thrift.NewTSocketConf(net.JoinHostPort(host, portStr), cfg)
+    trans = thrift.NewTSocketConf(net.JoinHostPort(host, portStr), cfg)
     if err != nil {
       fmt.Fprintln(os.Stderr, "error resolving address:", err)
       os.Exit(1)
