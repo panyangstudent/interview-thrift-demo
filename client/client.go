@@ -8,6 +8,11 @@ import (
 	"time"
 )
 
+func handleClient1 (client *Sample.GreeterClient) {
+	ctx := context.TODO()
+	res, _ := client.SayHello(ctx,nil)
+	fmt.Println("result is ", res)
+}
 func handleClient(client *Sample.SimpleServiceClient) {
 	ctx := context.TODO()
 	res, _ := client.Add(ctx,13,"25")
