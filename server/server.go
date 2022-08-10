@@ -23,7 +23,7 @@ func SimpleServer() {
 	transport, _ := thrift.NewTServerSocket(":8090")
 
 	processor := Sample.NewSimpleServiceProcessor(&handler.SimpleServiceHandler{})
-	//阻塞式单线程服务器，阻塞式IO
+	//阻塞式单线程服务器，非阻塞式IO
 	server := thrift.NewTSimpleServer4(processor,transport,transportFactory,protocolFactory)
 	server.Serve()
 }
