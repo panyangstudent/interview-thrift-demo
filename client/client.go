@@ -21,8 +21,8 @@ func handleClient(client *Sample.SimpleServiceClient) {
 func SimpleClient()  {
 	var transport thrift.TTransport
 	transport,  _ = thrift.NewTSocketConf("localhost:8090", &thrift.TConfiguration{
-		ConnectTimeout: time.Second, // Use 0 for no timeout
-		SocketTimeout:  time.Second, // Use 0 for no timeout
+		ConnectTimeout: time.Second,
+		SocketTimeout:  time.Second,
 	})
 	conf := &thrift.TConfiguration{
 		MaxFrameSize:       1024*256,
